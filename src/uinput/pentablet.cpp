@@ -64,6 +64,9 @@ Result<libevdev_uinput_ptr> create_tablet(const DeviceDefinition &device) {
   libevdev_enable_event_code(dev, EV_ABS, ABS_TILT_X, &abs_tilt);
   libevdev_enable_event_code(dev, EV_ABS, ABS_TILT_Y, &abs_tilt);
 
+  input_absinfo wheel{0, 0, 360, 0, 0, 0};
+  libevdev_enable_event_code(dev, EV_ABS, ABS_WHEEL, &wheel);
+
   // https://docs.kernel.org/input/event-codes.html#tablets
   libevdev_enable_property(dev, INPUT_PROP_POINTER);
   libevdev_enable_property(dev, INPUT_PROP_DIRECT);
@@ -155,6 +158,14 @@ void PenTablet::place_tool(
 void PenTablet::set_btn(PenTablet::BTN_TYPE btn, bool pressed) {
   if (auto tablet = _state->pen_tablet.get()) {
     libevdev_uinput_write_event(tablet, EV_KEY, btn_to_linux.at(btn), pressed ? 1 : 0);
+    libevdev_uinput_write_event(tablet, EV_SYN, SYN_REPORT, 0);
+  }
+}
+
+void PenTablet::set_wheel(float rotation) {
+  if (auto tablet = _state->pen_tablet.get()) {
+    int scaled_rotation = (int)std::lround(rotation * 360.0f);
+    libevdev_uinput_write_event(tablet, EV_ABS, ABS_WHEEL, scaled_rotation);
     libevdev_uinput_write_event(tablet, EV_SYN, SYN_REPORT, 0);
   }
 }

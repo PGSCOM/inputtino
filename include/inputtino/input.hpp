@@ -224,6 +224,12 @@ public:
 
   void set_btn(BTN_TYPE btn, bool pressed);
 
+  /**
+   * rotation is expected to be in the range [0.0, 1.0].
+   * It represents the barrel rotation of the pen (0.0 = 0°, 1.0 = 360°).
+   */
+  void set_wheel(float rotation);
+
 protected:
   typedef struct PenTabletState PenTabletState;
   std::shared_ptr<PenTabletState> _state;

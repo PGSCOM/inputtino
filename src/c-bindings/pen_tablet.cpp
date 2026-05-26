@@ -42,6 +42,12 @@ void inputtino_pen_tablet_set_button(InputtinoPenTablet *pen_tablet, enum INPUTT
   }
 }
 
+void inputtino_pen_tablet_set_wheel(InputtinoPenTablet *pen_tablet, float rotation) {
+  if (pen_tablet) {
+    reinterpret_cast<inputtino::PenTablet *>(pen_tablet)->set_wheel(rotation);
+  }
+}
+
 void inputtino_pen_tablet_destroy(InputtinoPenTablet *pen_tablet) {
   if(pen_tablet){
     inputtino::PenTablet *pen_tablet_ = reinterpret_cast<inputtino::PenTablet *>(pen_tablet);
